@@ -1,0 +1,109 @@
+{
+  "version": "2.1.0",
+  "runs": [
+    {
+      "tool": {
+        "driver": {
+          "name": "Glog.AI",
+          "organization": "Glog.AI",
+          "fullName": "Glog, Making software more secure",
+          "version": "1.0.0",
+          "semanticVersion": "1.0.0",
+          "informationUri": "https://www.glog.ai",
+          "rules": [
+            {
+              "id": "glog-c51c88fa-1eb4-49e3-8046-37fd1d354780",
+              "help": {
+                "text": "",
+                "markdown": "## Description\n\nThe `malloc` function in C++ is used to dynamically allocate memory at runtime. The vulnerability arises when the `malloc` function is used without proper error handling. If `malloc` fails to allocate the requested memory, it returns a null pointer. If this null pointer is not checked and is used in the program, it can lead to undefined behavior, crashes, or security vulnerabilities such as null pointer dereferencing.\n\n## Mitigation Advice\n\nTo mitigate this issue, always check the return value of `malloc` to ensure that it is not null before using the allocated memory. If `malloc` returns null, this means that the memory allocation failed, and appropriate error handling should be implemented.\n\n## Source Code Fix Recommendation\n\nHere is a simple example of how to properly use `malloc` with error checking:\n\n```cpp\n#include <stdlib.h>\n\nint* ptr = (int*) malloc(1024 * sizeof(int));\nif (ptr == NULL) {\n    // Handle error\n    exit(EXIT_FAILURE);\n}\n// Use ptr\nfree(ptr);\n```\n\nIn this example, if `malloc` fails to allocate memory, the program will exit with a failure status. In a real-world application, you would likely want to implement more sophisticated error handling.\n\n## Library Dependencies\n\nThe `malloc` function is part of the C standard library, so no additional library dependencies are required.\n\n## OWASP Resources\n\n- [OWASP C/C++ Vulnerability Guide](https://owasp.org/www-pdf-archive/OWASP_SCP_Quick_Reference_Guide_v2.pdf)\n\n## Common Weakness Enumeration (CWE)\n"
+              },
+              "properties": {
+                "tags": [
+                  "DS161085"
+                ]
+              }
+            }
+          ],
+          "language": "en-US",
+          "contents": [
+            "localizedData",
+            "nonLocalizedData"
+          ],
+          "isComprehensive": false
+        }
+      },
+      "language": "en-US",
+      "results": [
+        {
+          "ruleId": "glog-c51c88fa-1eb4-49e3-8046-37fd1d354780",
+          "kind": "fail",
+          "level": "note",
+          "message": {
+            "text": "Problematic C function detected (malloc)"
+          },
+          "locations": [
+            {
+              "physicalLocation": {
+                "artifactLocation": {
+                  "uri": "ccv/cwc-bench.c"
+                },
+                "region": {
+                  "startLine": 11,
+                  "startColumn": 21,
+                  "endLine": 11,
+                  "endColumn": 33,
+                  "charOffset": 283,
+                  "charLength": 12,
+                  "snippet": {
+                    "text": "malloc(1024)",
+                    "rendered": {
+                      "text": "malloc(1024)",
+                      "markdown": "`malloc(1024)`"
+                    }
+                  },
+                  "sourceLanguage": "c"
+                }
+              }
+            }
+          ],
+          "fixes": [
+            {
+              "description": {
+                "text": "If the value provided to malloc is the result of unsafe integer math, it can result in an exploitable condition. "
+              },
+              "artifactChanges": [
+                {
+                  "artifactLocation": {
+                    "uri": "ccv/cwc-bench.c"
+                  },
+                  "replacements": [
+                    {
+                      "deletedRegion": {
+                        "charOffset": 283,
+                        "charLength": 12
+                      },
+                      "insertedContent": {
+                        "text": "calloc(<number of elements>, <size of each element>)"
+                      }
+                    }
+                  ]
+                }
+              ]
+            }
+          ],
+          "properties": {
+            "DevSkimSeverity": "BestPractice",
+            "DevSkimConfidence": "High",
+            "tags": [
+              "API.DangerousAPI.ProblematicFunction"
+            ]
+          }
+        }
+      ],
+      "newlineSequences": [
+        "\r\n",
+        "\n"
+      ]
+    }
+  ]
+}
