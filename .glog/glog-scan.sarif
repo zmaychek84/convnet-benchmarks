@@ -1,0 +1,293 @@
+{
+  "version": "2.1.0",
+  "runs": [
+    {
+      "tool": {
+        "driver": {
+          "name": "Glog.AI",
+          "organization": "Glog.AI",
+          "fullName": "Glog, Making software more secure",
+          "version": "1.0.0",
+          "semanticVersion": "1.0.0",
+          "informationUri": "https://www.glog.ai",
+          "rules": [
+            {
+              "id": "glog-d8e16821-5139-41ae-ad79-67c9b6db8966",
+              "help": {
+                "text": "",
+                "markdown": "## Description\n\nThe `strncpy` function in C++ is a common source of vulnerabilities due to its potential to cause buffer overflow. This function copies a specified number of characters from one string to another. If the source string is longer than the specified number of characters, `strncpy` does not append a null character to the destination string, which can lead to buffer overflow. In the provided code, if the `file` string is longer than 1024 characters, it will cause a buffer overflow in `input.filename`.\n\n## Mitigation Advice\n\nTo mitigate this vulnerability, you should avoid using `strncpy` and instead use safer string handling functions that automatically handle the null character and prevent buffer overflow. One such function is `strlcpy`, which ensures that the destination string is null-terminated.\n\n## Source Code Fix Recommendation\n\nReplace the `strncpy` function with `strlcpy`:\n\n```cpp\n#include <string.h>\n\nstrlcpy(input.filename, file, sizeof(input.filename));\n```\n\n## Library Dependencies\n\nThe code example requires the `<string.h>` library.\n\n## References\n\n- [OWASP C++ Secure Coding Practices](https://cheatsheetseries.owasp.org/cheatsheets/C-Based_Toolchain_Hardening_Cheat_Sheet.html)\n- [CWE-120: Buffer Copy without Checking Size of Input ('Classic Buffer Overflow')](https://cwe.mitre.org/data/definitions/120.html)\n\nPlease note that `strlcpy` is not a standard C library function and may not be available on all platforms. If `strlcpy` is not available, consider using a different method to safely copy strings, such as `snprintf`."
+              },
+              "properties": {
+                "tags": [
+                  "DS111237"
+                ]
+              }
+            },
+            {
+              "id": "glog-9321c11c-27dd-4d0d-9e2e-1f2b8a69a426",
+              "help": {
+                "text": "",
+                "markdown": "## Description\n\nInsecure API function calls from untrusted inputs is a common vulnerability in JavaScript programming language. This vulnerability occurs when an application uses untrusted data in a function call that is not properly sanitized. This can lead to various security issues such as code injection, data leakage, and denial of service attacks.\n\nIn the provided code snippet, the application is allocating memory for a filename that is received from an untrusted source. If the input is not properly validated, an attacker could potentially exploit this to execute arbitrary code or cause a buffer overflow.\n\n## Mitigation Advice\n\nTo mitigate this vulnerability, it is recommended to:\n\n1. Always validate and sanitize untrusted inputs before using them in function calls.\n2. Use secure API functions that perform necessary input validation and sanitization.\n3. Implement proper error handling to prevent application crashes and potential information leakage.\n4. Use memory-safe programming practices to prevent buffer overflows and other memory-related vulnerabilities.\n\n## Source Code Fix Recommendation\n\nThe provided code snippet seems to be written in C, not JavaScript. However, the general principle of validating and sanitizing inputs before using them in function calls still applies. Here is a simple example of how to validate and sanitize inputs in JavaScript:\n\n```javascript\nlet filename = untrustedInput;\nif (typeof filename !== 'string' || filename.length > 1024) {\n    throw new Error('Invalid filename');\n}\nfilename = sanitize(filename);\n```\n\nIn this example, `sanitize` is a hypothetical function that you would implement to sanitize the filename, removing any potentially harmful characters.\n\n## Library Dependencies\n\nThe provided code snippet does not seem to have any JavaScript library dependencies. However, it does seem to rely on a C library for memory allocation (`ccmalloc`).\n\n## OWASP and CWE Resources\n\n- [OWASP Unvalidated Redirects and Forwards Cheat Sheet](https://cheatsheetseries.owasp.org/cheatsheets/Unvalidated_Redirects_and_Forwards_Cheat_Sheet.html)\n- [CWE-20: Improper Input Validation](https://cwe.mitre.org/data/definitions/20.html)\n\nPlease note that the provided links are active and accessible to anonymous users at the time of writing this report."
+              },
+              "properties": {
+                "tags": [
+                  "resources.rules.raptor-interesting-api-calls"
+                ]
+              }
+            },
+            {
+              "id": "glog-bf0b8814-71dd-4053-ac4a-63d252016db2",
+              "help": {
+                "text": "",
+                "markdown": "## Description\n\nThe vulnerability in question is a buffer overflow vulnerability that can occur when using the `strcpy` or `strncpy` functions in C/C++ programming languages. However, it's important to note that JavaScript does not have these functions or the `strcpy_s` function, as it handles strings and memory management differently. Therefore, this vulnerability does not apply to JavaScript.\n\nIn C/C++, `strcpy` and `strncpy` are used to copy strings. If the source string is longer than the destination buffer, it can lead to buffer overflow, which can cause crashes, data corruption, or even allow an attacker to execute arbitrary code.\n\nThe `strcpy_s` function is a safer alternative that includes an explicit length parameter to prevent buffer overflow.\n\n## Mitigation Advice\n\nIn JavaScript, strings are immutable and there is no direct equivalent to `strcpy` or `strncpy`. Therefore, the risk of buffer overflow vulnerabilities related to these functions is not present. However, it's still important to follow best practices for secure coding in JavaScript, such as input validation and proper error handling.\n\nIn C/C++, replace `strcpy` or `strncpy` with `strcpy_s` or another safe function that includes a length parameter. Always ensure that the destination buffer is large enough to hold the source string plus a null terminator.\n\n## Source Code Fix Recommendation\n\nIn C/C++, the code:\n\n```c\nstrncpy(input.filename, file, 1024);\n```\n\nCould be replaced with:\n\n```c\nstrcpy_s(input.filename, sizeof(input.filename), file);\n```\n\nThis ensures that the copy operation does not exceed the size of the destination buffer.\n\n## Library Dependencies\n\nThis code example in C/C++ requires the `string.h` library.\n\n## OWASP and CWE Links\n\n- [OWASP Buffer Overflow](https://owasp.org/www-community/vulnerabilities/Buffer_Overflow)\n- [CWE-120: Buffer Copy without Checking Size of Input ('Classic Buffer Overflow')](https://cwe.mitre.org/data/definitions/120.html)\n\nPlease note that these links are subject to change and may not always be accessible."
+              },
+              "properties": {
+                "tags": [
+                  "resources.rules.insecure-use-string-copy-fn"
+                ]
+              }
+            },
+            {
+              "id": "glog-6af51771-b2a3-4d9f-928c-d7f2b3db3e6a",
+              "help": {
+                "text": "",
+                "markdown": "## Description\n\nInsecure API function calls vulnerability in JavaScript refers to the use of insecure or deprecated API functions that can lead to security vulnerabilities. In the provided code snippet, the `fopen` function is used to open a file. This function can be insecure if the file path (`argv[1]`) is not properly validated or sanitized, leading to potential file inclusion vulnerabilities, directory traversal attacks, or other file-based attacks.\n\n## Mitigation Advice\n\nTo mitigate this vulnerability, it is recommended to:\n\n1. Always validate and sanitize user inputs: Never trust user input and always validate and sanitize it before using it in your code. This includes file paths, URLs, and any other data that comes from an external source.\n\n2. Use secure API functions: Always use the most secure version of an API function available. Avoid using deprecated or insecure functions.\n\n3. Implement proper error handling: Always implement proper error handling to prevent the disclosure of sensitive information in case of an error.\n\n## Source Code Fix Recommendation\n\nThe provided code snippet is in C, not JavaScript. However, the general recommendation for fixing this vulnerability would be to validate and sanitize the file path before using it in the `fopen` function. Here is an example in C:\n\n```c\n#include <stdio.h>\n#include <stdlib.h>\n\nint main(int argc, char *argv[]) {\n    if(argc != 2) {\n        printf(\"Usage: %s <filename>\\n\", argv[0]);\n        return 1;\n    }\n\n    // Add validation and sanitization of argv[1] here\n\n    FILE *r = fopen(argv[1], \"r\");\n    if(r == NULL) {\n        perror(\"Error opening file\");\n        return 1;\n    }\n\n    // Continue with the rest of the program\n\n    return 0;\n}\n```\n\n## Library Dependencies\n\nThe provided code snippet requires the `stdio.h` library in C.\n\n## References\n\n- [OWASP API Security](https://owasp.org/www-project-api-security/)\n- [CWE-676: Use of Potentially Dangerous Function](https://cwe.mitre.org/data/definitions/676.html)"
+              },
+              "properties": {
+                "tags": [
+                  "resources.rules.raptor-interesting-api-calls"
+                ]
+              }
+            },
+            {
+              "id": "glog-94303045-c3f7-4bce-a341-b1fbcc3034cb",
+              "help": {
+                "text": "",
+                "markdown": "## Description\n\nA Stack Buffer Overflow vulnerability occurs when a program writes more data to a buffer located on the stack than what is actually allocated for that buffer. This excess data then overflows into adjacent memory space, overwriting the information there, which could include other buffers, variables and program flow data. This can lead to erratic program behavior, including memory access errors, incorrect results, a crash, or a breach of system security.\n\nIn JavaScript, this vulnerability is less common due to the high-level nature of the language which abstracts away direct memory management from the developer. However, it can still occur in JavaScript environments that allow direct memory manipulation, such as WebAssembly or when interfacing with native code.\n\nThe provided code example is not in JavaScript, but in C or C++. It uses the `memset` function to set the memory of `layer_params` to zero. If the size of `layer_params` is not correctly calculated, this could lead to a buffer overflow.\n\n## Mitigation Advice\n\nIn JavaScript, the best way to prevent buffer overflow vulnerabilities is to avoid manipulating memory directly. If direct memory manipulation is necessary, always ensure that you are not writing more data to a buffer than it can hold.\n\nWhen working with native code or WebAssembly, use safe functions that check boundaries, and always validate and sanitize your inputs. Avoid using dangerous functions that do not check boundaries, such as `gets`, `strcpy`, and `sprintf`.\n\n## Source Code Fix Recommendation\n\nAs the provided code is not in JavaScript, a direct fix cannot be provided. However, in a C or C++ context, you should ensure that the size passed to `memset` does not exceed the size of `layer_params`.\n\n## Library Dependencies\n\nThe provided code example appears to be in C or C++, not JavaScript. The `memset` function is part of the C standard library, so no additional libraries are needed.\n\n## References\n\n- [OWASP Buffer Overflow](https://owasp.org/www-community/vulnerabilities/Buffer_Overflow)\n- [CWE-121: Stack-based Buffer Overflow](https://cwe.mitre.org/data/definitions/121.html)"
+              },
+              "properties": {
+                "tags": [
+                  "resources.rules.raptor-write-into-stack-buffer"
+                ]
+              }
+            },
+            {
+              "id": "glog-a8a60d6c-453a-406b-bf4f-f344018a1f9b",
+              "help": {
+                "text": "",
+                "markdown": "The description you provided refers to a vulnerability in Python, not JavaScript. The `pickle` module in Python is used for serializing and deserializing Python object structures. However, it is not safe to use `pickle` to load data that came from an untrusted source as it could lead to arbitrary code execution. This is because `pickle` is a binary protocol that can contain any Python command, which makes it a potential security risk.\n\n## Mitigation Advice\n\nTo mitigate this vulnerability, you should avoid using `pickle` for serializing and deserializing data. Instead, use safer alternatives like JSON, YAML, or XML. These are text-based serialization formats that do not have the same security risks as `pickle`.\n\n## Source Code Fix Recommendation\n\nHere is how you can fix the code using JSON:\n\n```python\nimport json\n\nwith open(args.output, 'w') as f:\n    json.dump(mean, f)\n```\n\n## Library Dependencies\n\nThe code example requires the following Python libraries:\n\n- `json`\n\n## OWASP and CWE Resources\n\n- [OWASP Python Security - Deserialization](https://cheatsheetseries.owasp.org/cheatsheets/Deserialization_Cheat_Sheet.html#python)\n- [CWE-502: Deserialization of Untrusted Data](https://cwe.mitre.org/data/definitions/502.html)\n\nPlease note that the links provided are active and accessible to anonymous users at the time of writing this report."
+              },
+              "properties": {
+                "tags": [
+                  "python.lang.security.deserialization.pickle.avoid-pickle"
+                ]
+              }
+            },
+            {
+              "id": "glog-651a8a49-f965-4682-8e30-88ae8674f873",
+              "help": {
+                "text": "",
+                "markdown": "## Description\n\nUnsigned to Signed Conversion Vulnerability is a type of vulnerability that occurs when an unsigned number is converted to a signed number in a way that leads to unexpected behavior. This can happen in JavaScript when a large unsigned number is converted to a signed number, which can result in a negative number. This can lead to various issues such as buffer overflows, integer overflows, and other types of vulnerabilities.\n\n## Mitigation Advice\n\nTo mitigate this vulnerability, it is recommended to always validate and sanitize input data. Avoid performing operations that can lead to an unsigned to signed conversion vulnerability. If you need to convert an unsigned number to a signed number, make sure to handle the case where the unsigned number is larger than the maximum value that can be represented by a signed number.\n\n## Source Code Fix Recommendation\n\nThe provided code snippet is written in C++, not JavaScript. However, the concept of the vulnerability remains the same. Here is a JavaScript example of how to avoid this vulnerability:\n\n```javascript\nlet unsignedNumber = 4294967295; // A large unsigned number\nlet signedNumber = Math.min(unsignedNumber, 2147483647); // Convert to signed number\n```\n\nIn this example, the `Math.min` function is used to ensure that the unsigned number is not larger than the maximum value that can be represented by a signed number.\n\n## Library Dependencies\n\nThe provided code does not require any library dependencies.\n\n## OWASP Resources\n\n- [OWASP Top 10 2017 Category A3: Sensitive Data Exposure](https://owasp.org/www-project-top-ten/2017/A3_2017-Sensitive_Data_Exposure)\n\n## Common Weakness Enumeration (CWE)\n\n- [CWE-681: Incorrect Conversion between Numeric Types](https://cwe.mitre.org/data/definitions/681.html)"
+              },
+              "properties": {
+                "tags": [
+                  "resources.rules.raptor-signed-unsigned-conversion"
+                ]
+              }
+            },
+            {
+              "id": "glog-ead9e600-0b89-46f2-ae3a-360336e65183",
+              "help": {
+                "text": "",
+                "markdown": "## Description\n\nThe `malloc` function in C++ is used to dynamically allocate memory at runtime. The vulnerability arises when the `malloc` function is used without proper error handling. If `malloc` fails to allocate the requested memory, it returns a null pointer. If this null pointer is not checked and is used in the program, it can lead to undefined behavior, crashes, or security vulnerabilities such as null pointer dereferencing.\n\n## Mitigation Advice\n\nTo mitigate this issue, always check the return value of `malloc` to ensure that it is not null before using the allocated memory. If `malloc` returns null, this means that the memory allocation failed, and appropriate error handling should be implemented.\n\n## Source Code Fix Recommendation\n\nHere is a simple example of how to properly use `malloc` with error checking:\n\n```cpp\n#include <stdlib.h>\n\nint* ptr = (int*) malloc(1024 * sizeof(int));\nif (ptr == NULL) {\n    // Handle error\n    exit(EXIT_FAILURE);\n}\n// Use ptr\nfree(ptr);\n```\n\nIn this example, if `malloc` fails to allocate memory, the program will exit with a failure status. In a real-world application, you would likely want to implement more sophisticated error handling.\n\n## Library Dependencies\n\nThe `malloc` function is part of the C standard library, so no additional library dependencies are required.\n\n## OWASP Resources\n\n- [OWASP C/C++ Vulnerability Guide](https://owasp.org/www-pdf-archive/OWASP_SCP_Quick_Reference_Guide_v2.pdf)\n\n## Common Weakness Enumeration (CWE)\n"
+              },
+              "properties": {
+                "tags": [
+                  "DS161085"
+                ]
+              }
+            },
+            {
+              "id": "glog-1b7caf4a-00dd-4ab8-b127-a42203dd923b",
+              "help": {
+                "text": "",
+                "markdown": "## Description\n\nInsecure API function calls vulnerability in JavaScript refers to the use of API functions that are known to have security weaknesses. These functions can be exploited by attackers to perform malicious activities such as code injection, data leakage, and denial of service attacks. In the provided code snippet, the `ccv_read` function from the ccv library is used, which might have potential security issues if not used properly.\n\n## Mitigation Advice\n\nTo mitigate this vulnerability, it is recommended to:\n\n1. Always validate and sanitize input data before passing it to an API function.\n2. Use secure alternatives to insecure API functions whenever possible.\n3. Implement proper error handling to prevent information leakage through error messages.\n4. Regularly update the libraries and dependencies to their latest versions to benefit from the latest security patches.\n\n## Source Code Fix Recommendation\n\nWithout the full context of the code, it's hard to provide a specific fix. However, a general recommendation would be to validate the `categorized->file.filename` before passing it to the `ccv_read` function. For example:\n\n```javascript\nif (isValid(categorized->file.filename)) {\n    ccv_read(categorized->file.filename, &image, CCV_IO_ANY_FILE | CCV_IO_RGB_COLOR);\n} else {\n    // Handle invalid filename\n}\n```\n\nIn this example, `isValid` is a hypothetical function that checks whether the filename is valid and safe to use.\n\n## Library Dependencies\n\nThe provided code snippet requires the ccv library.\n\n## OWASP and CWE Resources\n\n- [OWASP API Security](https://owasp.org/www-project-api-security/)\n- [CWE-676: Use of Potentially Dangerous Function](https://cwe.mitre.org/data/definitions/676.html)\n\nPlease note that the provided links are active and accessible for anonymous users at the time of writing this report."
+              },
+              "properties": {
+                "tags": [
+                  "resources.rules.raptor-interesting-api-calls"
+                ]
+              }
+            }
+          ],
+          "language": "en-US",
+          "contents": [
+            "localizedData",
+            "nonLocalizedData"
+          ],
+          "isComprehensive": false
+        }
+      },
+      "language": "en-US",
+      "results": [
+        {
+          "ruleId": "glog-d8e16821-5139-41ae-ad79-67c9b6db8966",
+          "kind": "fail",
+          "level": "error",
+          "message": {
+            "text": "\"Detected Use of Prohibited C Function (strncpy)\""
+          },
+          "locations": [
+            {
+              "physicalLocation": {
+                "artifactLocation": {
+                  "uri": "ccv/cwc-bench.c"
+                },
+                "region": {
+                  "startLine": 22,
+                  "startColumn": 2,
+                  "endLine": 22,
+                  "endColumn": 37,
+                  "charOffset": 604,
+                  "charLength": 35,
+                  "snippet": {
+                    "text": "strncpy(input.filename, file, 1024)",
+                    "rendered": {
+                      "text": "strncpy(input.filename, file, 1024)",
+                      "markdown": "`strncpy(input.filename, file, 1024)`"
+                    }
+                  },
+                  "sourceLanguage": "c"
+                }
+              }
+            }
+          ],
+          "fixes": [
+            {
+              "description": {
+                "text": "strncpy is dangerous, as if the source contains 'n' or more characters, it will not null terminate the destination."
+              },
+              "artifactChanges": [
+                {
+                  "artifactLocation": {
+                    "uri": "ccv/cwc-bench.c"
+                  },
+                  "replacements": [
+                    {
+                      "deletedRegion": {
+                        "charOffset": 604,
+                        "charLength": 35
+                      },
+                      "insertedContent": {
+                        "text": "strcpy_s(input.filename,  1024,  file)"
+                      }
+                    }
+                  ]
+                }
+              ]
+            },
+            {
+              "description": {
+                "text": "strncpy is dangerous, as if the source contains 'n' or more characters, it will not null terminate the destination."
+              },
+              "artifactChanges": [
+                {
+                  "artifactLocation": {
+                    "uri": "ccv/cwc-bench.c"
+                  },
+                  "replacements": [
+                    {
+                      "deletedRegion": {
+                        "charOffset": 604,
+                        "charLength": 35
+                      },
+                      "insertedContent": {
+                        "text": "strlcpy(input.filename,  file,  1024)"
+                      }
+                    }
+                  ]
+                }
+              ]
+            }
+          ],
+          "properties": {
+            "DevSkimSeverity": "Important",
+            "DevSkimConfidence": "High",
+            "tags": [
+              "API.DangerousAPI.BannedFunction"
+            ]
+          }
+        },
+        {
+          "ruleId": "glog-ead9e600-0b89-46f2-ae3a-360336e65183",
+          "kind": "fail",
+          "level": "note",
+          "message": {
+            "text": "Issue Detected with C Function (malloc)"
+          },
+          "locations": [
+            {
+              "physicalLocation": {
+                "artifactLocation": {
+                  "uri": "ccv/cwc-bench.c"
+                },
+                "region": {
+                  "startLine": 11,
+                  "startColumn": 21,
+                  "endLine": 11,
+                  "endColumn": 33,
+                  "charOffset": 283,
+                  "charLength": 12,
+                  "snippet": {
+                    "text": "malloc(1024)",
+                    "rendered": {
+                      "text": "malloc(1024)",
+                      "markdown": "`malloc(1024)`"
+                    }
+                  },
+                  "sourceLanguage": "c"
+                }
+              }
+            }
+          ],
+          "fixes": [
+            {
+              "description": {
+                "text": "If the value provided to malloc is the result of unsafe integer math, it can result in an exploitable condition. "
+              },
+              "artifactChanges": [
+                {
+                  "artifactLocation": {
+                    "uri": "ccv/cwc-bench.c"
+                  },
+                  "replacements": [
+                    {
+                      "deletedRegion": {
+                        "charOffset": 283,
+                        "charLength": 12
+                      },
+                      "insertedContent": {
+                        "text": "calloc(<number of elements>, <size of each element>)"
+                      }
+                    }
+                  ]
+                }
+              ]
+            }
+          ],
+          "properties": {
+            "DevSkimSeverity": "BestPractice",
+            "DevSkimConfidence": "High",
+            "tags": [
+              "API.DangerousAPI.ProblematicFunction"
+            ]
+          }
+        }
+      ],
+      "newlineSequences": [
+        "\r\n",
+        "\n"
+      ]
+    }
+  ]
+}
